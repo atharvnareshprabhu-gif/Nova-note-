@@ -27,20 +27,36 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        body {
+        html, body {
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
             background-color: var(--bg-primary);
             color: var(--text-primary);
-            height: 100vh;
-            height: 100dvh;
+        }
+
+        body {
             display: flex;
             flex-direction: column;
-            overflow: hidden;
+        }
+
+        /* App Container for Desktop/Large Screens */
+        .app-wrapper {
+            max-width: 600px;
+            width: 100%;
+            height: 100%;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            background: var(--bg-primary);
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
         }
 
         /* Top Header */
         .app-header {
             background: var(--bg-secondary);
-            padding: 14px 18px;
+            padding: 12px 16px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -49,7 +65,7 @@
         }
 
         .brand-title {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: 700;
             display: flex;
             align-items: center;
@@ -66,7 +82,7 @@
 
         /* Search Bar */
         .search-container {
-            padding: 12px 16px;
+            padding: 10px 14px;
             background: var(--bg-primary);
             flex-shrink: 0;
         }
@@ -75,10 +91,10 @@
             width: 100%;
             background: var(--bg-secondary);
             border: 1px solid var(--border);
-            padding: 10px 14px;
+            padding: 8px 12px;
             border-radius: 8px;
             color: var(--text-primary);
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             outline: none;
         }
 
@@ -98,7 +114,7 @@
             position: absolute;
             inset: 0;
             overflow-y: auto;
-            padding: 0 16px 80px 16px;
+            padding: 0 14px 70px 14px;
             display: flex;
             flex-direction: column;
             gap: 10px;
@@ -108,7 +124,7 @@
             background: var(--bg-secondary);
             border: 1px solid var(--border);
             border-radius: var(--radius);
-            padding: 16px;
+            padding: 14px;
             cursor: pointer;
             transition: transform 0.1s, border-color 0.2s;
         }
@@ -118,14 +134,14 @@
         }
 
         .note-card-title {
-            font-size: 1.05rem;
+            font-size: 1rem;
             font-weight: 600;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
             color: var(--text-primary);
         }
 
         .note-card-snippet {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: var(--text-secondary);
             line-height: 1.4;
             display: -webkit-box;
@@ -135,25 +151,25 @@
         }
 
         .note-card-footer {
-            margin-top: 12px;
+            margin-top: 10px;
             display: flex;
             justify-content: space-between;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: var(--text-secondary);
         }
 
         /* Floating Action Button */
         .fab {
-            position: fixed;
-            bottom: 80px;
-            right: 20px;
-            width: 56px;
-            height: 56px;
+            position: absolute;
+            bottom: 20px;
+            right: 16px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             background: var(--accent);
             color: #fff;
             border: none;
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -162,7 +178,7 @@
             z-index: 10;
         }
 
-        /* Editor Screen (Overlay for Mobile) */
+        /* Editor Screen (Overlay for Mobile/Desktop) */
         .editor-screen {
             position: absolute;
             inset: 0;
@@ -179,25 +195,26 @@
         }
 
         .editor-header {
-            padding: 10px 16px;
+            padding: 10px 14px;
             background: var(--bg-secondary);
             border-bottom: 1px solid var(--border);
             display: flex;
             align-items: center;
             justify-content: space-between;
+            flex-shrink: 0;
         }
 
         .btn-group {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
         .btn-text {
             background: transparent;
             border: none;
             color: var(--text-primary);
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 600;
             cursor: pointer;
             display: flex;
@@ -209,9 +226,9 @@
             background: var(--success);
             color: #fff;
             border: none;
-            padding: 6px 14px;
+            padding: 6px 12px;
             border-radius: 6px;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             font-weight: 600;
             cursor: pointer;
         }
@@ -220,17 +237,17 @@
             background: transparent;
             border: none;
             color: var(--text-primary);
-            font-size: 1.2rem;
-            padding: 6px;
+            font-size: 1.1rem;
+            padding: 4px;
             cursor: pointer;
         }
 
         .editor-body {
             flex: 1;
-            padding: 16px;
+            padding: 14px;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
             overflow-y: auto;
         }
 
@@ -238,7 +255,7 @@
             background: transparent;
             border: none;
             color: var(--text-primary);
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             font-weight: 700;
             outline: none;
         }
@@ -247,9 +264,9 @@
             background: var(--bg-secondary);
             border: 1px solid var(--border);
             color: var(--text-primary);
-            padding: 8px 12px;
+            padding: 6px 10px;
             border-radius: 6px;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             outline: none;
         }
 
@@ -258,11 +275,11 @@
             background: transparent;
             border: none;
             color: var(--text-primary);
-            font-size: 1rem;
-            line-height: 1.6;
+            font-size: 0.95rem;
+            line-height: 1.5;
             outline: none;
             resize: none;
-            min-height: 250px;
+            min-height: 180px;
         }
 
         /* Bottom Nav Bar */
@@ -271,18 +288,18 @@
             border-top: 1px solid var(--border);
             display: flex;
             justify-content: space-around;
-            padding: 10px 0;
-            z-index: 5;
+            padding: 8px 0 calc(8px + env(safe-area-inset-bottom));
             flex-shrink: 0;
+            z-index: 5;
         }
 
         .nav-tab {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 4px;
+            gap: 2px;
             color: var(--text-secondary);
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             background: none;
             border: none;
             cursor: pointer;
@@ -295,66 +312,68 @@
 
         .empty-msg {
             text-align: center;
-            margin-top: 60px;
+            margin-top: 50px;
             color: var(--text-secondary);
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
     </style>
 </head>
 <body>
 
-    <!-- Header -->
-    <header class="app-header">
-        <div class="brand-title">ZenNote <span class="badge">PRO</span></div>
-        <div id="saveState" style="font-size: 0.75rem; color: var(--text-secondary);">Ready</div>
-    </header>
+    <div class="app-wrapper">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="brand-title">ZenNote <span class="badge">PRO</span></div>
+            <div id="saveState" style="font-size: 0.75rem; color: var(--text-secondary);">Ready</div>
+        </header>
 
-    <!-- Search -->
-    <div class="search-container">
-        <input type="text" class="search-box" id="searchBox" placeholder="🔍 Search notes or tags..." oninput="renderNotes()">
-    </div>
+        <!-- Search -->
+        <div class="search-container">
+            <input type="text" class="search-box" id="searchBox" placeholder="🔍 Search notes or tags..." oninput="renderNotes()">
+        </div>
 
-    <!-- Main View Area -->
-    <div class="view-container">
-        <!-- Notes List View -->
-        <div class="list-screen" id="listScreen"></div>
+        <!-- Main View Area -->
+        <div class="view-container">
+            <!-- Notes List View -->
+            <div class="list-screen" id="listScreen"></div>
 
-        <!-- Floating Add Button -->
-        <button class="fab" id="fabBtn" onclick="createNewNote()">+</button>
+            <!-- Floating Add Button -->
+            <button class="fab" id="fabBtn" onclick="createNewNote()">+</button>
 
-        <!-- Full Mobile Editor Overlay -->
-        <div class="editor-screen" id="editorScreen">
-            <div class="editor-header">
-                <button class="btn-text" onclick="closeEditor()">← Back</button>
-                <div class="btn-group">
-                    <button class="btn-save" id="saveNoteBtn" onclick="manualSaveNote()">Save Note</button>
-                    <button class="icon-btn" title="Export Markdown" onclick="exportMD()">📥</button>
-                    <button class="icon-btn" style="color: var(--danger);" id="trashActionBtn" title="Trash / Delete" onclick="handleDelete()">🗑️</button>
+            <!-- Full Editor Overlay -->
+            <div class="editor-screen" id="editorScreen">
+                <div class="editor-header">
+                    <button class="btn-text" onclick="closeEditor()">← Back</button>
+                    <div class="btn-group">
+                        <button class="btn-save" id="saveNoteBtn" onclick="manualSaveNote()">Save Note</button>
+                        <button class="icon-btn" title="Export Markdown" onclick="exportMD()">📥</button>
+                        <button class="icon-btn" style="color: var(--danger);" id="trashActionBtn" title="Trash / Delete" onclick="handleDelete()">🗑️</button>
+                    </div>
+                </div>
+                <div class="editor-body">
+                    <input type="text" class="input-title" id="noteTitle" placeholder="Title..." oninput="autoSave()">
+                    <input type="text" class="input-tags" id="noteTags" placeholder="Tags e.g. #work, #ideas" oninput="autoSave()">
+                    <textarea class="input-content" id="noteContent" placeholder="Start typing here..." oninput="autoSave()"></textarea>
                 </div>
             </div>
-            <div class="editor-body">
-                <input type="text" class="input-title" id="noteTitle" placeholder="Title..." oninput="autoSave()">
-                <input type="text" class="input-tags" id="noteTags" placeholder="Tags e.g. #work, #ideas" oninput="autoSave()">
-                <textarea class="input-content" id="noteContent" placeholder="Start typing here..." oninput="autoSave()"></textarea>
-            </div>
         </div>
-    </div>
 
-    <!-- Bottom Navigation Bar -->
-    <nav class="bottom-nav">
-        <button class="nav-tab active" id="tabAll" onclick="switchTab('all')">
-            <span style="font-size: 1.2rem;">📝</span>
-            <span>All Notes</span>
-        </button>
-        <button class="nav-tab" id="tabTrash" onclick="switchTab('trash')">
-            <span style="font-size: 1.2rem;">🗑️</span>
-            <span>Trash Bin</span>
-        </button>
-        <button class="nav-tab" onclick="exportJSON()">
-            <span style="font-size: 1.2rem;">💾</span>
-            <span>Backup</span>
-        </button>
-    </nav>
+        <!-- Bottom Navigation Bar -->
+        <nav class="bottom-nav">
+            <button class="nav-tab active" id="tabAll" onclick="switchTab('all')">
+                <span style="font-size: 1.1rem;">📝</span>
+                <span>All Notes</span>
+            </button>
+            <button class="nav-tab" id="tabTrash" onclick="switchTab('trash')">
+                <span style="font-size: 1.1rem;">🗑️</span>
+                <span>Trash Bin</span>
+            </button>
+            <button class="nav-tab" onclick="exportJSON()">
+                <span style="font-size: 1.1rem;">💾</span>
+                <span>Backup</span>
+            </button>
+        </nav>
+    </div>
 
     <script>
         let notes = JSON.parse(localStorage.getItem('zen_mobile_notes')) || [];
@@ -466,7 +485,6 @@
             if(idx === -1) return;
 
             if(notes[idx].inTrash) {
-                // Restore or Delete logic
                 if(confirm('Restore this note or delete permanently? Press OK to Restore, Cancel for Permanent Delete.')) {
                     notes[idx].inTrash = false;
                 } else {
