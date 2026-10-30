@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ZenNote | Minimalist Notes</title>
+    <style>
+        :root {
+            --bg-primary: #121212;
+            --bg-secondary: #1e1e1e;
+            --bg-tertiary: #2a2a2a;
+            --accent: #6366f1;
+            --accent-hover: #4f46e5;
+            --success: #10b981;
+            --text-primary: #f3f4f6;
+            --text-secondary: #9ca3af;
+            --danger: #ef4444;
+            --border: #2d2d2d;
+            --radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Top Header */
+        .app-header {
+            background: var(--bg-secondary);
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .brand-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .badge {
+            background: var(--accent);
+            color: #fff;
+            font-size: 0.65rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        /* Search Bar */
+        .search-container {
+            padding: 12px 16px;
+            background: var(--bg-primary);
+        }
+
+        .search-box {
+            width: 100%;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            padding: 10px 14px;
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            outline: none;
+        }
+
+        .search-box:focus {
+            border-color: var(--accent);
+        }
+
+        /* Main View Container */
+        .view-container {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* List Screen */
+        .list-screen {
+            position: absolute;
+            inset: 0;
+            overflow-y: auto;
+            padding: 0 16px 80px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .note-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 16px;
+            cursor: pointer;
+            transition: transform 0.1s, border-color 0.2s;
+        }
+
+        .note-card:active {
+            transform: scale(0.98);
+        }
+
+        .note-card-title {
+            font-size: 1.05rem;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--text-primary);
+        }
+
+        .note-card-snippet {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .note-card-footer {
+            margin-top: 12px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        /* Floating Action Button */
+        .fab {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        /* Editor Screen (Overlay for Mobile) */
+        .editor-screen {
+            position: absolute;
+            inset: 0;
+            background: var(--bg-primary);
+            z-index: 20;
+            display: flex;
+            flex-direction: column;
+            transform: translateX(100%);
+            transition: transform 0.25s ease-in-out;
+        }
+
+        .editor-screen.active {
+            transform: translateX(0);
+        }
+
+        .editor-header {
+            padding: 10px 16px;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .btn-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-text {
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .btn-save {
+            background: var(--success);
+            color: #fff;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .icon-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            padding: 6px;
+            cursor: pointer;
+        }
+
+        .editor-body {
+            flex: 1;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            overflow-y: auto;
+        }
+
+        .input-title {
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.3rem;
+            font-weight: 700;
+            outline: none;
+        }
+
+        .input-tags {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            outline: none;
+        }
+
+        .input-content {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1rem;
+            line-height: 1.6;
+            outline: none;
+            resize: none;
+            min-height: 250px;
+        }
+
+        /* Bottom Nav Bar */
+        .bottom-nav {
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            z-index: 5;
+        }
+
+        .nav-tab {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            width: 33%;
+        }
+
+        .nav-tab.active {
+            color: var(--accent);
+        }
+
+        .empty-msg {
+            text-align: center;
+            margin-top: 60px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="app-header">
+        <div class="brand-title">ZenNote <span class="badge">PRO</span></div>
+        <div id="saveState" style="font-size: 0.75rem; color: var(--text-secondary);">Ready</div>
+    </header>
+
+    <!-- Search -->
+    <div class="search-container">
+        <input type="text" class="search-box" id="searchBox" placeholder="🔍 Search notes or tags..." oninput="renderNotes()">
+    </div>
+
+    <!-- Main View Area -->
+    <div class="view-container">
+        <!-- Notes List View -->
+        <div class="list-screen" id="listScreen"></div>
+
+        <!-- Floating Add Button -->
+        <button class="fab" id="fabBtn" onclick="createNewNote()">+</button>
+
+        <!-- Full Mobile Editor Overlay -->
+        <div class="editor-screen" id="editorScreen">
+            <div class="editor-header">
+                <button class="btn-text" onclick="closeEditor()">← Back</button>
+                <div class="btn-group">
+                    <button class="btn-save" id="saveNoteBtn" onclick="manualSaveNote()">Save Note</button>
+                    <button class="icon-btn" title="Export Markdown" onclick="exportMD()">📥</button>
+                    <button class="icon-btn" style="color: var(--danger);" id="trashActionBtn" title="Trash / Delete" onclick="handleDelete()">🗑️</button>
+                </div>
+            </div>
+            <div class="editor-body">
+                <input type="text" class="input-title" id="noteTitle" placeholder="Title..." oninput="autoSave()">
+                <input type="text" class="input-tags" id="noteTags" placeholder="Tags e.g. #work, #ideas" oninput="autoSave()">
+                <textarea class="input-content" id="noteContent" placeholder="Start typing here..." oninput="autoSave()"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation Bar -->
+    <nav class="bottom-nav">
+        <button class="nav-tab active" id="tabAll" onclick="switchTab('all')">
+            <span style="font-size: 1.2rem;">📝</span>
+            <span>All Notes</span>
+        </button>
+        <button class="nav-tab" id="tabTrash" onclick="switchTab('trash')">
+            <span style="font-size: 1.2rem;">🗑️</span>
+            <span>Trash Bin</span>
+        </button>
+        <button class="nav-tab" onclick="exportJSON()">
+            <span style="font-size: 1.2rem;">💾</span>
+            <span>Backup</span>
+        </button>
+    </nav>
+
+    <script>
+        let notes = JSON.parse(localStorage.getItem('zen_mobile_notes')) || [];
+        let activeNoteId = null;
+        let currentTab = 'all';
+
+        function saveStorage() {
+            localStorage.setItem('zen_mobile_notes', JSON.stringify(notes));
+            document.getElementById('saveState').innerText = 'Saved';
+        }
+
+        function createNewNote() {
+            const newNote = {
+                id: Date.now().toString(),
+                title: '',
+                content: '',
+                tags: '',
+                inTrash: false,
+                updatedAt: new Date().toISOString()
+            };
+            notes.unshift(newNote);
+            saveStorage();
+            openEditor(newNote.id);
+        }
+
+        function renderNotes() {
+            const listScreen = document.getElementById('listScreen');
+            const query = document.getElementById('searchBox').value.toLowerCase();
+            listScreen.innerHTML = '';
+
+            const filtered = notes.filter(n => {
+                const isTab = currentTab === 'trash' ? n.inTrash : !n.inTrash;
+                const isSearch = (n.title || '').toLowerCase().includes(query) || 
+                                 (n.content || '').toLowerCase().includes(query) || 
+                                 (n.tags || '').toLowerCase().includes(query);
+                return isTab && isSearch;
+            });
+
+            if (filtered.length === 0) {
+                listScreen.innerHTML = `<div class="empty-msg">${currentTab === 'trash' ? 'Trash is empty.' : 'No notes available. Tap + to create one.'}</div>`;
+                return;
+            }
+
+            filtered.forEach(n => {
+                const card = document.createElement('div');
+                card.className = 'note-card';
+                card.onclick = () => openEditor(n.id);
+                
+                const date = new Date(n.updatedAt).toLocaleDateString([], { month: 'short', day: 'numeric' });
+
+                card.innerHTML = `
+                    <div class="note-card-title">${n.title || 'Untitled Note'}</div>
+                    <div class="note-card-snippet">${n.content || 'No content written yet...'}</div>
+                    <div class="note-card-footer">
+                        <span>${date}</span>
+                        <span>${n.tags || ''}</span>
+                    </div>
+                `;
+                listScreen.appendChild(card);
+            });
+        }
+
+        function openEditor(id) {
+            activeNoteId = id;
+            const note = notes.find(n => n.id === id);
+            if(!note) return;
+
+            document.getElementById('noteTitle').value = note.title || '';
+            document.getElementById('noteTags').value = note.tags || '';
+            document.getElementById('noteContent').value = note.content || '';
+
+            const trashBtn = document.getElementById('trashActionBtn');
+            trashBtn.innerText = note.inTrash ? '♻️' : '🗑️';
+
+            document.getElementById('editorScreen').classList.add('active');
+            document.getElementById('fabBtn').style.display = 'none';
+        }
+
+        function manualSaveNote() {
+            autoSave();
+            closeEditor();
+        }
+
+        function closeEditor() {
+            autoSave();
+            document.getElementById('editorScreen').classList.remove('active');
+            document.getElementById('fabBtn').style.display = 'flex';
+            activeNoteId = null;
+            renderNotes();
+        }
+
+        function autoSave() {
+            if(!activeNoteId) return;
+            const note = notes.find(n => n.id === activeNoteId);
+            if(!note || note.inTrash) return;
+
+            note.title = document.getElementById('noteTitle').value;
+            note.tags = document.getElementById('noteTags').value;
+            note.content = document.getElementById('noteContent').value;
+            note.updatedAt = new Date().toISOString();
+
+            document.getElementById('saveState').innerText = 'Saving...';
+            saveStorage();
+        }
+
+        function handleDelete() {
+            if(!activeNoteId) return;
+            const idx = notes.findIndex(n => n.id === activeNoteId);
+            if(idx === -1) return;
+
+            if(notes[idx].inTrash) {
+                // Restore or Delete logic
+                if(confirm('Restore this note or delete permanently? Press OK to Restore, Cancel for Permanent Delete.')) {
+                    notes[idx].inTrash = false;
+                } else {
+                    notes.splice(idx, 1);
+                }
+            } else {
+                notes[idx].inTrash = true;
+            }
+
+            saveStorage();
+            closeEditor();
+        }
+
+        function switchTab(tab) {
+            currentTab = tab;
+            document.getElementById('tabAll').classList.toggle('active', tab === 'all');
+            document.getElementById('tabTrash').classList.toggle('active', tab === 'trash');
+            renderNotes();
+        }
+
+        function exportJSON() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(notes, null, 2));
+            const dlAnchor = document.createElement('a');
+            dlAnchor.setAttribute("href", dataStr);
+            dlAnchor.setAttribute("download", `zennote_backup.json`);
+            dlAnchor.click();
+        }
+
+        function exportMD() {
+            if(!activeNoteId) return;
+            const note = notes.find(n => n.id === activeNoteId);
+            if(!note) return;
+
+            const mdText = `# ${note.title || 'Untitled'}\n\n${note.content}`;
+            const dataStr = "data:text/markdown;charset=utf-8," + encodeURIComponent(mdText);
+            const dlAnchor = document.createElement('a');
+            dlAnchor.setAttribute("href", dataStr);
+            dlAnchor.setAttribute("download", `${(note.title || 'note').toLowerCase()}.md`);
+            dlAnchor.click();
+        }
+
+        renderNotes();
+    </script>
+</body>
+</html>
